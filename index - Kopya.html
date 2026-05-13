@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎡 Bilişim Bilgi Çarkı - Eğlenceli Öğrenme Oyunu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* GİRİŞ EKRANI */
+        #girisBolumu {
+            text-align: center;
+        }
+
+        .input-group {
+            margin: 30px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 10px rgba(118, 75, 162, 0.3);
+        }
+
+        /* BUTONLAR */
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        /* ÇARK ANİMASYONU */
+        .cark-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .cark {
+            font-size: 100px;
+            animation: cark-donme 2s infinite linear;
+            display: inline-block;
+        }
+
+        @keyframes cark-donme {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ÇARK DÖNDÜRME BÖLÜMÜ */
+        .cark-baslik {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .cark-baslik h2 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .cark-tuş {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .cark-animate {
+            font-size: 150px;
+            transition: all 0.1s;
+            filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.5));
+        }
+
+        .cark-animate:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 30px rgba(102, 126, 234, 0.8));
+        }
+
+        .cark-animate.donuyor {
+            animation: hizli-donme 0.05s steps(1) infinite;
+        }
+
+        @keyframes hizli-donme {
+            0% { transform: rotate(0deg) scale(1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        .cark-metni {
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 15px;
+            font-size: 1.2em;
+        }
+
+        /* SORU BÖLÜMÜ */
+        #soruBolumu {
+            display: none;
+        }
+
+        .soru-baslik {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .soru-baslik h2 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .soru-baslik p {
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        /* CEVAP SEÇENEKLERİ */
+        .cevaplar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .cevap-btn {
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .cevap-btn:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateY(-2px);
+        }
+
+        .cevap-btn.secili {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .cevap-btn.dogru {
+            border-color: #22c55e;
+            background: #22c55e;
+            color: white;
+            animation: dogru-animasyon 0.5s;
+        }
+
+        .cevap-btn.yanlis {
+            border-color: #ef4444;
+            background: #ef4444;
+            color: white;
+            animation: yanlis-animasyon 0.5s;
+        }
+
+        @keyframes dogru-animasyon {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes yanlis-animasyon {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* GERİ BİLDİRİM */
+        .geri-bildirim {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .geri-bildirim.dogru {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #22c55e;
+        }
+
+        .geri-bildirim.yanlis {
+            background: #fee2e2;
+            color: #7f1d1d;
+            border-left: 4px solid #ef4444;
+        }
+
+        .aciklama {
+            background: #eff6ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 5px;
+            color: #1e3a8a;
+            margin-top: 15px;
+        }
+
+        /* SKOR */
+        .skor-bilgisi {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            color: #856404;
+        }
+
+        /* KONTROL BUTONLARI */
+        .kontrol-butonlari {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-ikinci {
+            background: #6b7280;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1em;
+        }
+
+        .btn-ikinci:hover {
+            background: #4b5563;
+        }
+
+        /* SKOR TABLOSU */
+        #skorTablosu {
+            display: none;
+            text-align: center;
+        }
+
+        .skorlar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .skorlar h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .skor-satiri {
+            font-size: 1.2em;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .skor-satiri:last-child {
+            border-bottom: none;
+        }
+
+        .skor-etiketi {
+            display: inline-block;
+            min-width: 200px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .skor-degeri {
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+
+        /* DEĞERLENDİRME */
+        .degerlendirme {
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .degerlendirme.mukemmel {
+            background: #d4fc79;
+            color: #2d4a00;
+        }
+
+        .degerlendirme.harika {
+            background: #84e2aa;
+            color: #003300;
+        }
+
+        .degerlendirme.iyi {
+            background: #fbbf24;
+            color: #451a03;
+        }
+
+        .degerlendirme.basla {
+            background: #f87171;
+            color: #7f1d1d;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .cevaplar {
+                grid-template-columns: 1fr;
+            }
+
+            .cark {
+                font-size: 60px;
+            }
+
+            .btn, .btn-ikinci {
+                width: 100%;
+            }
+
+            .kontrol-butonlari {
+                flex-direction: column;
+            }
+        }
+
+        /* HAL VE HAVA */
+        .emoji {
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        .loading {
+            display: inline-block;
+            animation: yukarı-asagi 0.6s infinite;
+        }
+
+        @keyframes yukarı-asagi {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- GİRİŞ EKRANI -->
+        <div id="girisBolumu">
+            <div class="header">
+                <h1>🎡 Bilişim Bilgi Çarkı</h1>
+                <p>Bilişim dünyasında ne kadar bilgilisin? Öğren ve eğlen!</p>
+            </div>
+            
+            <div class="cark-container">
+                <div class="cark">🎡</div>
+                <div class="cark-metni">Oyuna başlamak için adını gir!</div>
+            </div>
+
+            <div class="input-group">
+                <label for="oyuncuAdi">Adın nedir?</label>
+                <input type="text" id="oyuncuAdi" placeholder="Adını yazınız..." maxlength="30">
+            </div>
+
+            <button class="btn btn-primary" onclick="oyunaBasla()">
+                🚀 OYUNA BAŞLA
+            </button>
+        </div>
+
+        <!-- SORU BÖLÜMÜ -->
+        <div id="soruBolumu">
+            <div class="skor-bilgisi" id="skorBilgisi">
+                Doğru: <span id="dogruSayisi">0</span> / Toplam: <span id="toplamSayisi">0</span>
+            </div>
+
+            <!-- ÇARKI DÖNDÜRME BÖLÜMÜ -->
+            <div id="carkBolumu" style="text-align: center; margin-bottom: 40px;">
+                <div class="cark-baslik">
+                    <h2>🎡 ÇARKI DÖNDÜR!</h2>
+                    <p style="font-size: 1.2em; margin-top: 10px;">Çarkına tıkla ve sorunun gelişini bekle</p>
+                </div>
+                <div class="cark-tuş" id="carkTusu">
+                    <div class="cark-animate" id="carkAnimate">🎡</div>
+                </div>
+                <p id="carkMesaji" style="color: #667eea; font-weight: 600; margin-top: 15px;">
+                    Çarkı döndürmek için tıkla...
+                </p>
+            </div>
+
+            <div id="soruBolumuFinal" style="display: none;">
+                <div class="soru-baslik">
+                    <h2>Soru <span id="soruNumarasi">1</span></h2>
+                    <p id="soruMetni"></p>
+                </div>
+
+                <div class="geri-bildirim" id="geriBildirim"></div>
+
+                <div class="cevaplar" id="cevaplar"></div>
+
+                <div class="aciklama" id="aciklama" style="display: none;"></div>
+
+                <div class="kontrol-butonlari">
+                    <button class="btn btn-primary" id="devamBtn" onclick="sonrakiSoru()" style="display: none;">
+                        ➡️ SONRAKI SORU
+                    </button>
+                    <button class="btn btn-ikinci" onclick="oyunaKayit()">
+                        ❌ OYUNU BITIR
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SKOR TABLOSU -->
+        <div id="skorTablosu">
+            <div class="header">
+                <h1>🏆 OYUN BİTTİ!</h1>
+            </div>
+
+            <div class="skorlar">
+                <h2>📊 Final Skor Tablosu</h2>
+                
+                <div class="skor-satiri">
+                    <span class="skor-etiketi">👤 Oyuncu:</span>
+                    <span class="skor-degeri" id="oyuncuAdiSon"></span>
+                </div>
+
+                <div class="skor-satiri">
+                    <span class="skor-etiketi">❓ Toplam Sorular:</span>
+                    <span class="skor-degeri" id="toplamSoruSon">0</span>
+                </div>
+
+                <div class="skor-satiri">
+                    <span class="skor-etiketi">✅ Doğru Cevaplar:</span>
+                    <span class="skor-degeri" id="dogruCevapSon">0</span>
+                </div>
+
+                <div class="skor-satiri">
+                    <span class="skor-etiketi">📈 Başarı Oranı:</span>
+                    <span class="skor-degeri" id="basariOraniSon">0%</span>
+                </div>
+
+                <div class="skor-satiri">
+                    <span class="skor-etiketi">⭐ Toplam Puan:</span>
+                    <span class="skor-degeri" id="toplamPuanSon">0</span>
+                </div>
+            </div>
+
+            <div class="degerlendirme" id="degerlendirme"></div>
+
+            <button class="btn btn-primary" onclick="oyunaBaslaDeneme()">
+                🔄 TEKRAR OYNA
+            </button>
+        </div>
+    </div>
+
+    <!-- İÇ ÇARK SORULARI -->
+    <script>
+        // Bilişim Soruları Veri Tabanı
+        const SORULAR = [
+            {
+                soru: "GPS nedir?",
+                cevaplar: ["Küresel Konum Belirleme Sistemi", "İnternet ağı", "Bilgisayar işlemcisi", "Kablosuz ağ"],
+                dogru: 0,
+                aciklama: "🛰️ GPS (Global Positioning System), uydu teknolojisini kullanarak konum belirlemeyi sağlar!"
+            },
+            {
+                soru: "Dünyanın ilk programcısı kimdir?",
+                cevaplar: ["Ada Lovelace", "Alan Turing", "Grace Hopper", "Charles Babbage"],
+                dogru: 0,
+                aciklama: "👩‍💻 Ada Lovelace, 1800'lerin ortasında ilk bilgisayar algoritmasını yazmıştır!"
+            },
+            {
+                soru: "Wi-Fi'nin açılımı nedir?",
+                cevaplar: ["Wireless Fidelity", "Wireless Internet", "Wide Interface", "Web Internet Frequency"],
+                dogru: 0,
+                aciklama: "📶 Wi-Fi, kablolar olmadan internet bağlantısı sağlayan muhteşem bir teknolojidir!"
+            },
+            {
+                soru: "RAM ve ROM arasındaki fark nedir?",
+                cevaplar: ["RAM geçici, ROM kalıcı bellektir", "Aralarında fark yoktur", "ROM daha hızlıdır", "RAM USB için kullanılır"],
+                dogru: 0,
+                aciklama: "💾 RAM işlemler sırasında veriyi tutar (hızlı ama geçici), ROM ise sabit veriler içerir!"
+            },
+            {
+                soru: "HTML nedir?",
+                cevaplar: ["Web sayfaları oluşturmak için kullanılan dil", "Yazılım geliştirme dili", "Hata düzeltme aracı", "Grafik tasarım programı"],
+                dogru: 0,
+                aciklama: "🏗️ HTML (HyperText Markup Language), web tasarımının temelini oluşturur!"
+            },
+            {
+                soru: "Python nedir?",
+                cevaplar: ["Programlama dili", "Bir tür yılan", "İşletim sistemi", "Grafikler için yazılım"],
+                dogru: 0,
+                aciklama: "🐍 Python, başlamak için en kolay ve en popüler programlama dillerinden biridir!"
+            },
+            {
+                soru: "CPU nedir?",
+                cevaplar: ["Merkezi İşlem Birimi", "İnternet hızlandırıcısı", "Yazılım kütüphanesi", "Ağ cihazı"],
+                dogru: 0,
+                aciklama: "🧠 CPU bilgisayarın 'beyni'dir ve tüm hesaplamaları yapar!"
+            },
+            {
+                soru: "Cloud Storage nedir?",
+                cevaplar: ["İnternet üzerinde veri depolama", "Fiziksel sabit disk", "USB bellekler", "Kağıda veri yazma"],
+                dogru: 0,
+                aciklama: "☁️ Cloud Storage ile dosyalarınızı internette güvenli bir şekilde depolayabilirsiniz!"
+            },
+            {
+                soru: "VPN ne işe yarar?",
+                cevaplar: ["İnternet bağlantısını şifreler ve güvenliğini artırır", "Bilgisayarı hızlandırır", "Oyunları geliştirmek için", "Video izlemek için"],
+                dogru: 0,
+                aciklama: "🔒 VPN (Virtual Private Network), internetteki gizliliğinizi korur!"
+            },
+            {
+                soru: "Blockchain nedir?",
+                cevaplar: ["Zincir benzeri veri depolama teknolojisi", "Sosyal medya platformu", "E-posta istemcisi", "Video oynatıcısı"],
+                dogru: 0,
+                aciklama: "⛓️ Blockchain, Bitcoin gibi kripto paraların temelini oluşturan teknoloji!"
+            },
+            {
+                soru: "API nedir?",
+                cevaplar: ["Yazılımlar arasında iletişim sağlayan arayüz", "Bilgisayar markası", "Elektrik kaynağı", "İnternet sitesi"],
+                dogru: 0,
+                aciklama: "🔌 API sayesinde farklı yazılımlar birbirleriyle haberleşebilir!"
+            },
+            {
+                soru: "Machine Learning nedir?",
+                cevaplar: ["Bilgisayarları öğrenmeye ve gelişmeye izin veren teknik", "Makine tamiri", "Makinaların fiziksel öğrenme", "Fabrika otomasyonu"],
+                dogru: 0,
+                aciklama: "🤖 Machine Learning ile bilgisayarlar veriden öğrenerek akıllı hale gelir!"
+            },
+            {
+                soru: "IoT (Nesnelerin İnterneti) nedir?",
+                cevaplar: ["Cihazların internetle bağlı olarak veri alışverişi yapması", "Sadece telefon ve bilgisayar", "Elektrik faturası", "Kütüphane sistemi"],
+                dogru: 0,
+                aciklama: "📱 IoT teknolojisiyle akıllı ev, akıllı şehir ve daha pek çok uygulama mümkün!"
+            },
+            {
+                soru: "Bit nedir?",
+                cevaplar: ["0 veya 1 olan bilginin en küçük birimi", "Yazılım hatasının adı", "İnternet hızı ölçüsü", "Bilgisayar markası"],
+                dogru: 0,
+                aciklama: "🔢 Bit (Binary Digit), dijital dünyanın temel yapı taşıdır!"
+            },
+            {
+                soru: "Siber Güvenlik nedir?",
+                cevaplar: ["Bilgisayarları ve ağları saldırılara karşı koruma", "Asker üniforması", "Fiziksel kasa güvenliği", "Kapı kilidi"],
+                dogru: 0,
+                aciklama: "🛡️ Siber güvenlik, dijital dünyada kendimizi ve verilerimizi korumamızı sağlar!"
+            },
+        ];
+
+        // Oyun Durumu
+        let oyunDurumu = {
+            oyuncuAdi: '',
+            suankiSoru: 0,
+            dogruCevaplar: 0,
+            toplamSoru: 0,
+            cevapVerildi: false,
+            sorular: []
+        };
+
+        // Çark Döndürme Mekanizması
+        let carkDonuyorMu = false;
+
+        function carkTikladigi() {
+            if (carkDonuyorMu || oyunDurumu.cevapVerildi) return;
+
+            carkDonuyorMu = true;
+            
+            const carkAnimate = document.getElementById('carkAnimate');
+            const carkMesaji = document.getElementById('carkMesaji');
+            const carkTusu = document.getElementById('carkTusu');
+            
+            // CSS sınıfını ekle
+            carkAnimate.classList.add('donuyor');
+            carkTusu.style.pointerEvents = 'none';
+            carkMesaji.textContent = '🌟 ÇARK DÖNÜYOR... TİRRRRİT!';
+            carkMesaji.style.color = '#764ba2';
+            
+            // Ses efekti başlat
+            baslatTirirtSesi();
+            
+            // 2 saniye sonra soruyu göster
+            setTimeout(() => {
+                carkAnimate.classList.remove('donuyor');
+                carkTusu.style.pointerEvents = 'auto';
+                carkMesaji.textContent = 'Çark durdu! Sorunuz hazır...';
+                carkMesaji.style.color = '#22c55e';
+                
+                // Çark bölümünü gizle ve soru bölümünü göster
+                document.getElementById('carkBolumu').style.display = 'none';
+                document.getElementById('soruBolumuFinal').style.display = 'block';
+                
+                soruGoster();
+                carkDonuyorMu = false;
+            }, 2000);
+        }
+
+        function baslatTirirtSesi() {
+            try {
+                // Web Audio API ile ses oluştur
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Tırıltı sesi için
+                for (let i = 0; i < 40; i++) {
+                    setTimeout(() => {
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        // Frekans: 400-500 Hz arası değişen tıkırtı
+                        oscillator.frequency.value = 400 + (i % 100);
+                        
+                        // Ses yüksekliği
+                        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.03);
+                        
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.03);
+                    }, i * 50);
+                }
+            } catch (e) {
+                console.log('Ses özellikleri bu tarayıcıda desteklenmiyor');
+            }
+        }
+
+        // Çark tıklaması için dinleyici ekle
+        document.addEventListener('DOMContentLoaded', function() {
+            const carkTusu = document.getElementById('carkTusu');
+            if (carkTusu) {
+                carkTusu.addEventListener('click', carkTikladigi);
+            }
+        });
+
+        // Oyuna Başla
+        function oyunaBasla() {
+            const isim = document.getElementById('oyuncuAdi').value.trim();
+            
+            if (!isim) {
+                alert('Lütfen adını gir!');
+                return;
+            }
+
+            oyunDurumu.oyuncuAdi = isim;
+            oyunDurumu.sorular = [...SORULAR].sort(() => Math.random() - 0.5); // Soruları karıştır
+            oyunDurumu.suankiSoru = 0;
+            oyunDurumu.dogruCevaplar = 0;
+            oyunDurumu.toplamSoru = 0;
+            oyunDurumu.cevapVerildi = false;
+
+            // Ekranları değiştir
+            document.getElementById('girisBolumu').style.display = 'none';
+            document.getElementById('soruBolumu').style.display = 'block';
+            document.getElementById('carkBolumu').style.display = 'block';
+            document.getElementById('soruBolumuFinal').style.display = 'none';
+
+            // Skor bilgisini güncelle
+            document.getElementById('dogruSayisi').textContent = oyunDurumu.dogruCevaplar;
+            document.getElementById('toplamSayisi').textContent = oyunDurumu.suankiSoru;
+        }
+
+        // Soruyu göster
+        function soruGoster() {
+            if (oyunDurumu.suankiSoru >= oyunDurumu.sorular.length) {
+                oyunuBitir();
+                return;
+            }
+
+            const soru = oyunDurumu.sorular[oyunDurumu.suankiSoru];
+            
+            // Soru ve cevapları karıştır
+            const cevaplarKarisiik = [...soru.cevaplar].sort(() => Math.random() - 0.5);
+            
+            // Doğru cevabın yeni konumunu bul
+            const yeniDogru = cevaplarKarisiik.indexOf(soru.cevaplar[soru.dogru]);
+
+            // Soru numarasını göster
+            document.getElementById('soruNumarasi').textContent = oyunDurumu.suankiSoru + 1;
+            
+            // Soruyu göster
+            document.getElementById('soruMetni').textContent = soru.soru;
+
+            // Cevapları göster
+            const cevaplarDiv = document.getElementById('cevaplar');
+            cevaplarDiv.innerHTML = '';
+
+            cevaplarKarisiik.forEach((cevap, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'cevap-btn';
+                btn.textContent = cevap;
+                btn.onclick = () => cevapSec(index, yeniDogru, cevaplarKarisiik);
+                cevaplarDiv.appendChild(btn);
+            });
+
+            // Geri bildirimi temizle
+            document.getElementById('geriBildirim').style.display = 'none';
+            document.getElementById('aciklama').style.display = 'none';
+            document.getElementById('devamBtn').style.display = 'none';
+
+            // Skor bilgisini güncelle
+            document.getElementById('dogruSayisi').textContent = oyunDurumu.dogruCevaplar;
+            document.getElementById('toplamSayisi').textContent = oyunDurumu.suankiSoru;
+
+            oyunDurumu.cevapVerildi = false;
+        }
+
+        // Cevap Seç
+        function cevapSec(secilenIndex, dogruIndex, cevaplar) {
+            if (oyunDurumu.cevapVerildi) return;
+
+            oyunDurumu.cevapVerildi = true;
+
+            const butonlar = document.querySelectorAll('.cevap-btn');
+            const soru = oyunDurumu.sorular[oyunDurumu.suankiSoru];
+
+            if (secilenIndex === dogruIndex) {
+                // DOĞRU CEVAP
+                oyunDurumu.dogruCevaplar++;
+                
+                butonlar[secilenIndex].classList.add('dogru');
+                
+                document.getElementById('geriBildirim').textContent = '🎉 DOĞRU CEVAP! 🎉';
+                document.getElementById('geriBildirim').className = 'geri-bildirim dogru';
+                document.getElementById('geriBildirim').style.display = 'block';
+            } else {
+                // YANLIŞ CEVAP
+                butonlar[secilenIndex].classList.add('yanlis');
+                butonlar[dogruIndex].classList.add('dogru');
+                
+                document.getElementById('geriBildirim').textContent = '❌ YANLIŞ CEVAP! ❌';
+                document.getElementById('geriBildirim').className = 'geri-bildirim yanlis';
+                document.getElementById('geriBildirim').style.display = 'block';
+            }
+
+            // Butonları devre dışı bırak
+            butonlar.forEach(btn => btn.style.pointerEvents = 'none');
+
+            // Açıklamayı göster
+            document.getElementById('aciklama').textContent = '💡 ' + soru.aciklama;
+            document.getElementById('aciklama').style.display = 'block';
+
+            // Devam butonunu göster
+            document.getElementById('devamBtn').style.display = 'inline-block';
+
+            oyunDurumu.toplamSoru++;
+        }
+
+        // Sonraki Soru
+        function sonrakiSoru() {
+            oyunDurumu.suankiSoru++;
+            oyunDurumu.cevapVerildi = false;
+            
+            // Çark bölümünü göster, soru bölümünü gizle
+            document.getElementById('carkBolumu').style.display = 'block';
+            document.getElementById('soruBolumuFinal').style.display = 'none';
+            document.getElementById('carkMesaji').textContent = 'Çarkı döndürmek için tıkla...';
+            document.getElementById('carkMesaji').style.color = '#667eea';
+            
+            carkDonuyorMu = false;
+        }
+
+        // Oyunu Bitir
+        function oyunaKayit() {
+            if (oyunDurumu.toplamSoru === 0 || !confirm('Oyunu bitirmek istediğine emin misin?')) {
+                return;
+            }
+            oyunuBitir();
+        }
+
+        function oyunuBitir() {
+            // Skor tablosunu göster
+            document.getElementById('soruBolumu').style.display = 'none';
+            document.getElementById('skorTablosu').style.display = 'block';
+
+            // Skor bilgilerini doldur
+            const basariOrani = oyunDurumu.toplamSoru > 0 
+                ? ((oyunDurumu.dogruCevaplar / oyunDurumu.toplamSoru) * 100).toFixed(1)
+                : 0;
+
+            document.getElementById('oyuncuAdiSon').textContent = oyunDurumu.oyuncuAdi;
+            document.getElementById('toplamSoruSon').textContent = oyunDurumu.toplamSoru;
+            document.getElementById('dogruCevapSon').textContent = oyunDurumu.dogruCevaplar;
+            document.getElementById('basariOraniSon').textContent = basariOrani + '%';
+            document.getElementById('toplamPuanSon').textContent = oyunDurumu.dogruCevaplar * 10;
+
+            // Değerlendirme
+            const degerlendirmeDiv = document.getElementById('degerlendirme');
+            if (basariOrani == 100) {
+                degerlendirmeDiv.textContent = '🏆 MÜKEMMEL - BİLİŞİM UZMANI! 👑';
+                degerlendirmeDiv.className = 'degerlendirme mukemmel';
+            } else if (basariOrani >= 80) {
+                degerlendirmeDiv.textContent = '⭐ HARIKA - ÇOK İYİ BİLGİ SAHİBİ! 🌟';
+                degerlendirmeDiv.className = 'degerlendirme harika';
+            } else if (basariOrani >= 60) {
+                degerlendirmeDiv.textContent = '👍 İYİ - DEVAM ETTİREBİLİRSİN! 📚';
+                degerlendirmeDiv.className = 'degerlendirme iyi';
+            } else {
+                degerlendirmeDiv.textContent = '📖 BAŞLA ÖĞRENMEYE - DAHA ÇALIŞ! 💪';
+                degerlendirmeDiv.className = 'degerlendirme basla';
+            }
+        }
+
+        // Tekrar Oyna
+        function oyunaBaslaDeneme() {
+            document.getElementById('skorTablosu').style.display = 'none';
+            document.getElementById('soruBolumu').style.display = 'block';
+            document.getElementById('carkBolumu').style.display = 'block';
+            document.getElementById('soruBolumuFinal').style.display = 'none';
+            document.getElementById('oyuncuAdi').value = '';
+            document.getElementById('oyuncuAdi').focus();
+            carkDonuyorMu = false;
+        }
+
+        // Çark tıklaması için dinleyici ekle (zaten üst kısımda var)
+    </script>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #ffffff;
+            color: #202124;
+        }
+
+        .header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .header a {
+            color: rgba(0, 0, 0, 0.87);
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .header a:hover {
+            color: rgba(0, 0, 0, 0.87);
+            text-decoration: underline;
+        }
+
+        .header-right {
+            align-items: center;
+        }
+
+        .header-right .profile {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .header-right .profile:hover {
+            transform: scale(1.1);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 200px);
+            padding: 20px;
+        }
+
+        .logo {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .logo h1 {
+            font-size: 92px;
+            font-weight: 400;
+            color: #4285f4;
+            letter-spacing: 2px;
+        }
+
+        .logo h1 span:nth-child(1) { color: #4285f4; }
+        .logo h1 span:nth-child(2) { color: #ea4335; }
+        .logo h1 span:nth-child(3) { color: #fbbc04; }
+        .logo h1 span:nth-child(4) { color: #4285f4; }
+        .logo h1 span:nth-child(5) { color: #34a853; }
+        .logo h1 span:nth-child(6) { color: #ea4335; }
+
+        .search-container {
+            width: 100%;
+            max-width: 584px;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 48px;
+            background: #fff;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 0 20px;
+            transition: box-shadow 0.2s;
+        }
+
+        .search-box:hover {
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+            border-color: rgba(223, 225, 229, 0);
+        }
+
+        .search-box:focus-within {
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+            border-color: rgba(223, 225, 229, 0);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            color: #9aa0a6;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 0;
+            font-size: 16px;
+            color: rgba(0, 0, 0, 0.87);
+            background: transparent;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(0, 0, 0, 0.54);
+        }
+
+        .voice-icon {
+            width: 20px;
+            height: 20px;
+            color: #4285f4;
+            cursor: pointer;
+            margin-left: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .voice-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            background-color: #f8f9fa;
+            border: 1px solid #f8f9fa;
+            border-radius: 4px;
+            color: #3c4043;
+            font-size: 14px;
+            margin: 11px 4px;
+            padding: 10px 24px;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+            background-color: #f8f9fa;
+            border: 1px solid #dadce0;
+            color: #202124;
+        }
+
+        .btn:active {
+            border: 1px solid #4285f4;
+            color: #4285f4;
+        }
+
+        .language {
+            margin-top: 30px;
+            font-size: 13px;
+            color: #70757a;
+            text-align: center;
+        }
+
+        .language a {
+            color: #70757a;
+            text-decoration: none;
+            margin: 0 3px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .language a:hover {
+            color: #4285f4;
+        }
+
+        .footer {
+            background-color: #f2f2f2;
+            padding: 15px 20px;
+            font-size: 13px;
+            color: #70757a;
+            border-top: 1px solid #dadce0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .footer-content {
+            max-width: 100%;
+            padding: 0 20px;
+        }
+
+        .footer-top {
+            margin-bottom: 15px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: #70757a;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #4285f4;
+        }
+
+        .footer-divider {
+            display: inline-block;
+            margin: 0 10px;
+            color: #dadce0;
+        }
+
+        @media (max-width: 600px) {
+            .logo h1 {
+                font-size: 60px;
+            }
+
+            .search-container {
+                max-width: 90%;
+            }
+
+            .buttons {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .header-left {
+                gap: 15px;
+            }
+
+            .footer {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <a href="#">Gmail</a>
+            <a href="#">Görseller</a>
+        </div>
+        <div class="header-right">
+            <a href="#">Google Uygulamaları</a>
+            <div class="profile">K</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <h1>
+                <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+            </h1>
+        </div>
+
+        <!-- Search Box -->
+        <div class="search-container">
+            <div class="search-box">
+                <div class="search-icon">🔍</div>
+                <input type="text" placeholder="Google'da ara veya URL yazın">
+                <div class="voice-icon">🎤</div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="buttons">
+            <button class="btn">Google'da Ara</button>
+            <button class="btn">Kendimi Şanslı Hissediyorum</button>
+        </div>
+
+        <!-- Language -->
+        <div class="language">
+            Google ayrıca sunuluyor:
+            <a href="#">Ελληνικά</a>
+            <span class="footer-divider">•</span>
+            <a href="#">English</a>
+            <span class="footer-divider">•</span>
+            <a href="#">Español</a>
+            <span class="footer-divider">•</span>
+            <a href="#">Français</a>
+            <span class="footer-divider">•</span>
+            <a href="#">Deutsch</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-top">
+                Türkiye
+            </div>
+            <ul class="footer-links">
+                <li><a href="#">Reklam</a></li>
+                <li><a href="#">İşletme</a></li>
+                <li><a href="#">Hakkında</a></li>
+                <li><a href="#">Google'ı Kullan</a></li>
+                <li><a href="#">Gizlilik</a></li>
+                <li><a href="#">Şartlar</a></li>
+                <li><a href="#">Ayarlar</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Arama işlevi
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('.search-box input');
+            const searchButtons = document.querySelectorAll('.btn');
+
+            searchButtons[0].addEventListener('click', function() {
+                if (searchInput.value.trim()) {
+                    alert('Arama yapılıyor: ' + searchInput.value);
+                    // Gerçek uygulamada: window.location.href = 'https://www.google.com/search?q=' + encodeURIComponent(searchInput.value);
+                }
+            });
+
+            searchButtons[1].addEventListener('click', function() {
+                alert('Kendini şanslı hisset! 🍀');
+            });
+
+            // Enter tuşu ile arama
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchButtons[0].click();
+                }
+            });
+
+            // Mikrofon simülasyonu
+            document.querySelector('.voice-icon').addEventListener('click', function() {
+                alert('Ses araması başlatıldı... 🎤\n(Tarayıcı Web Speech API desteği gerekir)');
+            });
+        });
+    </script>
+</body>
+</html>
