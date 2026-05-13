@@ -151,8 +151,10 @@
         .cark-animate {
             width: 180px;
             max-width: 100%;
+            display: inline-block;
             transition: all 0.1s;
             filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.5));
+            transform-origin: center center;
         }
 
         .cark-animate:hover {
@@ -161,7 +163,7 @@
         }
 
         .cark-animate.donuyor {
-            animation: hizli-donme 0.05s steps(1) infinite;
+            animation: hizli-donme 1s linear infinite;
         }
 
         @keyframes hizli-donme {
