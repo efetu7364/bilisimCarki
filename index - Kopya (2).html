@@ -115,7 +115,8 @@
         }
 
         .cark {
-            font-size: 100px;
+            width: 140px;
+            max-width: 100%;
             animation: cark-donme 2s infinite linear;
             display: inline-block;
         }
@@ -148,7 +149,8 @@
         }
 
         .cark-animate {
-            font-size: 150px;
+            width: 180px;
+            max-width: 100%;
             transition: all 0.1s;
             filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.5));
         }
@@ -441,7 +443,7 @@
             </div>
             
             <div class="cark-container">
-                <div class="cark">🎡</div>
+                <img class="cark" src="cark.png" alt="Çark">
                 <div class="cark-metni">Oyuna başlamak için adını gir!</div>
             </div>
 
@@ -468,7 +470,7 @@
                     <p style="font-size: 1.2em; margin-top: 10px;">Çarkına tıkla ve sorunun gelişini bekle</p>
                 </div>
                 <div class="cark-tuş" id="carkTusu">
-                    <div class="cark-animate" id="carkAnimate">🎡</div>
+                    <img class="cark-animate" id="carkAnimate" src="cark.png" alt="Çark">
                 </div>
                 <p id="carkMesaji" style="color: #667eea; font-weight: 600; margin-top: 15px;">
                     Çarkı döndürmek için tıkla...
